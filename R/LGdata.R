@@ -1,7 +1,7 @@
 filenames = c("atm" = "data/atm_chem.RData",
               "monthly" = "data/monthly_lake_level.RData",
               "exo" = "data/exo.RData",
-              "ice" = "data/ice_cover.RData",)
+              "ice" = "data/ice_cover.RData")
 
 #' @title Load Lake George Data
 #'
