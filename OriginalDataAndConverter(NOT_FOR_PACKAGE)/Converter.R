@@ -40,8 +40,6 @@ exo <-read.csv('exofull.csv')%>%
 atm.chem <-read.csv('atm_chem_v4.csv')%>%
   clean_names()
 
-#applying metadata variables to actual sheet
-
 glimpse(monthly.lake.level)
 #date needs to be converted
 monthly.lake.level <- monthly.lake.level%>%
@@ -64,6 +62,51 @@ glimpse(atm.chem)
 atm.chem <- atm.chem %>%
   mutate(collection_datetime_utc = mdy_hm(collection_datetime_utc))
 
+filenames = c("atm" = "data/atm_chem.RData",
+              "monthly" = "data/monthly_lake_level.RData",
+              "exo" = "data/exo.RData",
+              "ice" = "data/ice_cover.RData")
+
+is.convertible.to.date <- function(mydate) {
+  tryCatch(!is.na(as.Date(mydate, tryFormats = c("%Y-%m-%d", "%Y/%m/%d","%d-%m-%Y","%m-%d-%Y"))),
+           error = function(err) {FALSE})
+}
+
+get <- function(...){
+  l <- list(...)
+  files <- list()
+  dates <- list()
+  for (param in l){
+    print(param)
+    print(is.convertible.to.date(param))
+    if(is.convertible.to.date(param)) {
+        date <- as.Date(param, tryFormats = c("%Y-%m-%d", "%Y/%m/%d","%d-%m-%Y","%m-%d-%Y"))
+        dates <- c(dates, date)
+
+      }else {
+        param = tolower(param)
+
+        if (param %in% names(filenames)){
+          file = match.arg(param, names(filenames))
+          files <-c(files, file)
+
+        }else{
+          print("no such file")
+        }
+      }
+  }
+  print("files")
+  for (file in files){
+    print(file)
+  }
+  print("dates")
+  for (date in dates){
+    print(dates)
+  }
+}
+
+
+#applying metadata variables to actual sheet (no longer doing this) --------------
 #splitting up variable sheet
 variable.meta <- variable.meta%>%
   clean_names()%>%
